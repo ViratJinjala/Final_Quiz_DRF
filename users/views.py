@@ -54,7 +54,7 @@ class UserScoreView(generics.ListAPIView):
 class SubjectListView(generics.ListAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    permission_classes = [IsAdmin,IsUser]
+    # permission_classes = [IsAdmin,IsUser]
 
 class ChapterListBySubjectView(generics.ListAPIView):
     serializer_class = ChapterSerializer

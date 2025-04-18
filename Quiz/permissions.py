@@ -4,14 +4,14 @@ class IsAdmin(permissions.BasePermission):
     """
     Allows access only to admin users.
     """
-    def has_permission(self, request):
+    def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == 'admin'
  
 class IsUser(permissions.BasePermission):
     """
     Allows access only to Users users.
     """
-    def has_permission(self, request):
+    def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == 'user'
  
 
@@ -20,7 +20,7 @@ class AdminFullUserReadOnly(permissions.BasePermission):
     """
     Allows full access to admin users and read-only access to interviewer users.
     """
-    def has_permission(self, request):
+    def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False
          

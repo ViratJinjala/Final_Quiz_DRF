@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'users.auth_backend.CustomUserBackend',
-]
+# AUTHENTICATION_BACKENDS = [
+#     'users.auth_backend.CustomUserBackend',
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

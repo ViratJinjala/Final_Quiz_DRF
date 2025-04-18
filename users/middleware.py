@@ -7,7 +7,6 @@ class EmailDomainValidatorMiddleware:
         self.trusted_domains = ["gmail.com", "microsoft.com", "outlook.com"]
 
     def __call__(self, request):
-        print("hello from middleware")
         if request.path == "/users/register/" and request.method == "POST":
                 if request.content_type == "application/json":
                     data = json.loads(request.body)

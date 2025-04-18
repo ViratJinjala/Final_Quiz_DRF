@@ -1,37 +1,23 @@
-"""
-URL configuration for Quiz project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('', include('users.urls')),
     path('',include('admin.urls'))
 ]
 
 
-"""
-{
-    "refresh": 
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NTAwOTczOSwiaWF0IjoxNzQ0OTM3NzM5LCJqdGkiOiJmYTM2Y2Y2M2I0MWI0MDYxYWJkYWQ5MjU5MjRhYWNjOCIsInVzZXJfaWQiOjF9.YQMNuWK6-Ha61pn3GpZoBHafEJQ6fmGKS8eofTf-xOc",
-    "access": 
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1MzY5NzM5LCJpYXQiOjE3NDQ5Mzc3MzksImp0aSI6IjVjM2IyOWI0NjliMTRkMDA5ZjFjOWFiNTEyMTQzMDYxIiwidXNlcl9pZCI6MX0.4z06dgy2oljDaf-TElMrNzzJptZKpWGXF9IdK_lPRIo"
-}
-"""
+# { User
+#     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NTA1NDE4OSwiaWF0IjoxNzQ0OTgyMTg5LCJqdGkiOiI0ZDk4NDE0NTY4MjQ0MjY0YjI2MDg0M2QyMDg2MWU0YSIsInVzZXJfaWQiOjJ9.vzoxdHmHvUAGGmNDKCOrNbzKX1bQS2n-NHLdN6ranJA",
+#     "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDE0MTg5LCJpYXQiOjE3NDQ5ODIxODksImp0aSI6IjIwZDQ0Y2JlM2YyOTQyODhiMmNlZDk4MjJjMjY4ODNlIiwidXNlcl9pZCI6Mn0.mzcwv44WKw2BmmmjfggHAPPuON5miG2sWYcwTtPR7tY"
+# }
+
+# { Admin
+#     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NTA1NDI1NSwiaWF0IjoxNzQ0OTgyMjU1LCJqdGkiOiJjYTQyNTNlYTk1MWQ0ZjI1ODg4ODI5Nzg0ZjFkZTEzNCIsInVzZXJfaWQiOjF9.dihmf1198HvleimGh0TjSlDLWb6JXpEcriGm5_SzmeA",
+#     "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDE0MjU1LCJpYXQiOjE3NDQ5ODIyNTUsImp0aSI6IjU5Y2ZlN2U0ZjVmMjQ2NDdiMTJiYTM2Y2ZjMWI0MGZmIiwidXNlcl9pZCI6MX0.1OwPyFTr2w_ms9W8_bWB4drpnSFNZolntw3SIuVrxP4"
+# }
