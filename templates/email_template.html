@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome {{ username }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4A6FDC 0%, #6C8FF8 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #FF9800, #F44336, #9C27B0, #3F51B5, #009688);
+        }
+
+        .content {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .content h2 {
+            color: #4A6FDC;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .content p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #505050;
+        }
+
+        .highlight {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4A6FDC;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eeeeee;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to Our App</h1>
+        </div>
+
+        <div class="content">
+            <h2>Hello {{ username }}!</h2>
+
+            <p>We're excited to have you with us. 🎉</p>
+
+            <div class="highlight">
+                <p>Thank you for joining! You're now part of a growing community of students using our app to practice and improve their skills.</p>
+            </div>
+
+            <p>Get started by logging into your dashboard and exploring all the features we’ve built for you.</p>
+
+
+
+            <div class="signature">
+                <p>
+                    Cheers,<br>
+                    <strong>The Team</strong>
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>This is an automated message. Please do not reply.</p>
+            <p>&copy; All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
