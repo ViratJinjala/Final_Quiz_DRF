@@ -56,7 +56,7 @@ class UserScoreView(generics.ListAPIView):
 class SubjectListView(generics.ListAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAdmin,IsUser]
 
 class ChapterListBySubjectView(generics.ListAPIView):
     serializer_class = ChapterSerializer
@@ -76,7 +76,7 @@ class QuizListByChapterView(generics.ListAPIView):
 
 class QuestionListByQuizView(generics.ListAPIView):
     serializer_class = QuestionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes =[IsAdmin,IsUser]
 
     def get_queryset(self):
         quiz_id = self.kwargs['quiz_id']
@@ -104,7 +104,6 @@ class QuizAttemptView(generics.CreateAPIView):
         question_results = []
         
         for question in questions:
-            # Find the corresponding answer
             answer = next((a for a in answers if int(a.get('question_id')) == question.id), None)
             
             if not answer:
@@ -124,8 +123,6 @@ class QuizAttemptView(generics.CreateAPIView):
                 'correct_option': question.correct_option,
                 'is_correct': is_correct
             })
-        
-        # Save the score
         score = Score.objects.create(
             user=request.user,
             quiz=quiz,
@@ -134,8 +131,6 @@ class QuizAttemptView(generics.CreateAPIView):
             correct_answers=correct_answers,
             total_questions=len(questions)
         )
-        
-        # Prepare response
         result_data = {
             'quiz_id': quiz_id,
             'total_questions': len(questions),
