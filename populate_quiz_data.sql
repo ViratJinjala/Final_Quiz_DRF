@@ -1,8 +1,4 @@
--- Clear existing data (optional, uncomment if needed)
--- DELETE FROM users_question;
--- DELETE FROM users_quiz;
--- DELETE FROM users_chapter;
--- DELETE FROM users_subject;
+-- For populating the database for testing
 
 -- Insert Subjects
 INSERT INTO users_subject (name, description) VALUES

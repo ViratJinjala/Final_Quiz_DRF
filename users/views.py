@@ -76,7 +76,7 @@ class QuizListByChapterView(generics.ListAPIView):
 
 class QuestionListByQuizView(generics.ListAPIView):
     serializer_class = QuestionSerializer
-    permission_classes =[IsAdmin,IsUser]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         quiz_id = self.kwargs['quiz_id']
@@ -84,13 +84,10 @@ class QuestionListByQuizView(generics.ListAPIView):
 
 class QuizAttemptView(generics.CreateAPIView):
     serializer_class = QuizAttemptSerializer
-    permission_classes = [IsUser]
+    permission_classes = [permissions.AllowAny]
     
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        print(f"User authenticated: {request.user.is_authenticated}")
-        print(f"User: {request.user}")
-        print(f"User is admin: {request.user.is_admin}")
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
@@ -123,6 +120,7 @@ class QuizAttemptView(generics.CreateAPIView):
                 'correct_option': question.correct_option,
                 'is_correct': is_correct
             })
+    
         score = Score.objects.create(
             user=request.user,
             quiz=quiz,
@@ -131,6 +129,7 @@ class QuizAttemptView(generics.CreateAPIView):
             correct_answers=correct_answers,
             total_questions=len(questions)
         )
+        
         result_data = {
             'quiz_id': quiz_id,
             'total_questions': len(questions),
