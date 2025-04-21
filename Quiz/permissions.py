@@ -5,14 +5,14 @@ class IsAdmin(permissions.BasePermission):
     Allows access only to admin users.
     """
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == 'admin'
+        return request.user.is_authenticated and request.user.is_admin == True
  
 class IsUser(permissions.BasePermission):
     """
-    Allows access only to Users users.
+    Allows access only to Users.
     """
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == 'user'
+        return request.user.is_authenticated and request.user.is_admin == False
  
 
  
@@ -24,10 +24,10 @@ class AdminFullUserReadOnly(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
          
-        if request.user.role == 'admin':
+        if request.user.is_admin == True:
             return True
              
-        if request.user.role == 'users' and request.method in permissions.SAFE_METHODS:
+        if request.user.is_admin == False and request.method in permissions.SAFE_METHODS:
             return True
              
         return False 

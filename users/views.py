@@ -1,15 +1,17 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from .models import User, Subject, Chapter, Quiz, Question, Score
-from .serializers import UserSerializer, SubjectSerializer, ChapterSerializer, QuizSerializer, QuestionSerializer, ScoreSerializer
+from .serializers import UserSerializer, SubjectSerializer, ChapterSerializer, QuizSerializer, QuestionSerializer, ScoreSerializer, QuizAttemptSerializer, QuizResultSerializer
 from .tasks import send_email_task
 from Quiz.permissions import IsAdmin, IsUser
 from django.template.loader import render_to_string
+from django.utils import timezone
+from django.db import transaction
 
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsUser]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -33,7 +35,7 @@ class UserRegistrationView(generics.CreateAPIView):
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
-    permission_classes = [IsUser]
+    permission_classes = [IsUser,IsAdmin]
 
     def get_object(self):
         return self.request.user
@@ -48,13 +50,13 @@ class UserScoreView(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
-        return Score.objects.filter(subject_id=user_id)
+        return Score.objects.filter(user_id=user_id)
 
 
 class SubjectListView(generics.ListAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    # permission_classes = [IsAdmin,IsUser]
+    permission_classes = [IsAdmin]
 
 class ChapterListBySubjectView(generics.ListAPIView):
     serializer_class = ChapterSerializer
@@ -74,10 +76,77 @@ class QuizListByChapterView(generics.ListAPIView):
 
 class QuestionListByQuizView(generics.ListAPIView):
     serializer_class = QuestionSerializer
-    permission_classes = [IsAdmin,IsUser]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         quiz_id = self.kwargs['quiz_id']
         return Question.objects.filter(quiz_id=quiz_id)
+
+class QuizAttemptView(generics.CreateAPIView):
+    serializer_class = QuizAttemptSerializer
+    permission_classes = [IsUser]
+    
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        print(f"User authenticated: {request.user.is_authenticated}")
+        print(f"User: {request.user}")
+        print(f"User is admin: {request.user.is_admin}")
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        quiz_id = serializer.validated_data['quiz_id']
+        answers = serializer.validated_data['answers']
+        quiz = Quiz.objects.get(id=quiz_id)
+        questions = Question.objects.filter(quiz=quiz)
+        
+        correct_answers = 0
+        total_score = 0
+        question_results = []
+        
+        for question in questions:
+            # Find the corresponding answer
+            answer = next((a for a in answers if int(a.get('question_id')) == question.id), None)
+            
+            if not answer:
+                continue
+                
+            selected_option = answer.get('selected_option')
+            is_correct = int(selected_option) == question.correct_option
+            
+            if is_correct:
+                correct_answers += 1
+                total_score += question.weightage or 1
+            
+            question_results.append({
+                'question_id': question.id,
+                'question': question.question_statement,
+                'selected_option': selected_option,
+                'correct_option': question.correct_option,
+                'is_correct': is_correct
+            })
+        
+        # Save the score
+        score = Score.objects.create(
+            user=request.user,
+            quiz=quiz,
+            time_stamp=timezone.now(),
+            total_score=total_score,
+            correct_answers=correct_answers,
+            total_questions=len(questions)
+        )
+        
+        # Prepare response
+        result_data = {
+            'quiz_id': quiz_id,
+            'total_questions': len(questions),
+            'correct_answers': correct_answers,
+            'total_score': total_score,
+            'question_results': question_results
+        }
+        
+        result_serializer = QuizResultSerializer(data=result_data)
+        result_serializer.is_valid(raise_exception=True)
+        
+        return Response(result_serializer.data, status=status.HTTP_201_CREATED)
 
 

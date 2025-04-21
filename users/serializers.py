@@ -7,6 +7,22 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'password', 'username', 'qualification', 'dob']
         extra_kwargs = {'password': {'write_only': True}}
 
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            email=validated_data['email'],
+            password=validated_data['password'],
+            username=validated_data['username'],
+            qualification=validated_data.get('qualification'),
+            dob=validated_data.get('dob')
+        )
+        return user
+
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+        return super().update(instance, validated_data)
+
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
@@ -25,9 +41,28 @@ class QuizSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id', 'quiz', 'question_statement', 'option1', 'option2', 'option3', 'option4', 'correct_option', 'weightage']
+        fields = ['id', 'quiz', 'question_statement', 'option1', 'option2', 'option3', 'option4', 'weightage']
 
 class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Score
         fields = ['id', 'user', 'quiz', 'time_stamp', 'total_score', 'correct_answers', 'total_questions']
+
+class QuizAttemptSerializer(serializers.Serializer):
+    quiz_id = serializers.IntegerField()
+    answers = serializers.ListField(
+        child=serializers.DictField(
+            child=serializers.CharField()
+        )
+    )
+
+class QuizResultSerializer(serializers.Serializer):
+    quiz_id = serializers.IntegerField()
+    total_questions = serializers.IntegerField()
+    correct_answers = serializers.IntegerField()
+    total_score = serializers.IntegerField()
+    question_results = serializers.ListField(
+        child=serializers.DictField(
+            child=serializers.CharField()
+        )
+    )

@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
     UserRegistrationView, UserProfileView,
-    SubjectListView, ChapterListBySubjectView, QuizListByChapterView, QuestionListByQuizView, UserScoreView
+    SubjectListView, ChapterListBySubjectView, QuizListByChapterView, QuestionListByQuizView, UserScoreView,
+    QuizAttemptView
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path('chapters/<int:chapter_id>/quizzes/', QuizListByChapterView.as_view(), name='quiz-list-by-chapter'),
     path('quizzes/<int:quiz_id>/questions/', QuestionListByQuizView.as_view(), name='question-list-by-quiz'),
     path('score/<int:user_id>/scores/', UserScoreView.as_view(), name='scores-list-for-user'),
+    path('quiz/attempt/', QuizAttemptView.as_view(), name='quiz-attempt'),
 ]

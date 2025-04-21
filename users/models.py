@@ -1,6 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
+from .managers import UserManager
 
-class User(models.Model):
+
+class User(AbstractBaseUser):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
     username = models.CharField(max_length=100, unique=True, null=False)
@@ -10,6 +13,11 @@ class User(models.Model):
     dob = models.DateField(blank=True, null=True)
     def __str__(self):
         return self.username
+    
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email','password']
+
+    objects = UserManager()
 
 class Subject(models.Model):
     name = models.CharField(max_length=100, unique=True)
