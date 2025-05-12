@@ -1,9 +1,9 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from .models import User, Subject, Chapter, Quiz, Question, Score
-from .serializers import UserSerializer, SubjectSerializer, ChapterSerializer, QuizSerializer, QuestionSerializer, ScoreSerializer, QuizAttemptSerializer, QuizResultSerializer
-from .tasks import send_email_task
-from Quiz.permissions import IsAdmin, IsUser
+from users.models import User, Subject, Chapter, Quiz, Question, Score
+from users.serializers import UserSerializer, SubjectSerializer, ChapterSerializer, QuizSerializer, QuestionSerializer, ScoreSerializer, QuizAttemptSerializer, QuizResultSerializer
+from users.tasks import send_email_task
+from adminz.permissions import IsAdmin, IsUser
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.db import transaction

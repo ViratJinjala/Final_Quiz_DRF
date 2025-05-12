@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (
+from users.views import (
     UserRegistrationView, UserProfileView,
     SubjectListView, ChapterListBySubjectView, QuizListByChapterView, QuestionListByQuizView, UserScoreView,
     QuizAttemptView
