@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
-from .managers import UserManager
+from users.managers import UserManager
 
 
 class User(AbstractBaseUser):
@@ -22,6 +22,11 @@ class User(AbstractBaseUser):
 class Subject(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_subject')
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_subject')
 
     def __str__(self):
         return self.name
@@ -30,6 +35,11 @@ class Chapter(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='chapters')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_chapter')
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_chapter')
 
     def __str__(self):
         return f"{self.subject.name} - {self.name}"
@@ -39,6 +49,11 @@ class Quiz(models.Model):
     date_of_quiz = models.DateField(blank=True, null=True)
     time_duration = models.CharField(max_length=50, blank=True, null=True)
     remarks = models.TextField(blank=True, null=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_quizzes')
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_quizzes')
 
     def __str__(self):
         return f"Quiz for {self.chapter.name} on {self.date_of_quiz}"
@@ -52,14 +67,19 @@ class Question(models.Model):
     option4 = models.CharField(max_length=255)
     correct_option = models.PositiveSmallIntegerField()
     weightage = models.IntegerField(blank=True, null=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_question')
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_question')
 
     def __str__(self):
         return f"Q: {self.question_statement[:50]}..."
 
-class Score(models.Model):
+class QuizResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='scores')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='scores')
-    time_stamp = models.DateTimeField(blank=True, null=True)
+    time_stamp = models.DateTimeField(auto_now_add=True)
     total_score = models.IntegerField(blank=True, null=True)
     correct_answers = models.IntegerField(blank=True, null=True)
     total_questions = models.IntegerField(blank=True, null=True)

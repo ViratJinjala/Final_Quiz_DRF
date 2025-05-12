@@ -8,7 +8,14 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.db import transaction
 
+
 class UserRegistrationView(generics.CreateAPIView):
+    """
+    API view to handle user registration.
+
+    - POST: Creates a new user account with the provided registration data.
+      On successful registration, sends a welcome email asynchronously using Celery.
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
@@ -34,6 +41,12 @@ class UserRegistrationView(generics.CreateAPIView):
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
+    """
+    API view to retrieve or update a user's profile.
+
+    - GET: Retrieve the profile of the currently authenticated user.
+    - PUT/PATCH: Update the profile of the currently authenticated user.
+    """
     serializer_class = UserSerializer
     permission_classes = [IsUser,IsAdmin]
 
@@ -45,6 +58,11 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
 
 class UserScoreView(generics.ListAPIView):
+    """
+    API view to list all scores associated with a specific user.
+
+    - GET: Retrieves all scores for a particular user, identified by their user ID.
+    """
     serializer_class = ScoreSerializer
     permission_classes = [IsUser,IsAdmin]
 
@@ -54,11 +72,23 @@ class UserScoreView(generics.ListAPIView):
 
 
 class SubjectListView(generics.ListAPIView):
+    """
+    API view to list all subjects.
+
+    - GET: Retrieves a list of all subjects in the system.
+    """
+    
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
     permission_classes = [IsAdmin,IsUser]
 
+
 class ChapterListBySubjectView(generics.ListAPIView):
+    """
+    API view to list all chapters associated with a specific subject.
+
+    - GET: Retrieves all chapters associated with a given subject, identified by the subject ID.
+    """
     serializer_class = ChapterSerializer
     permission_classes = [IsAdmin,IsUser]
 
@@ -66,7 +96,13 @@ class ChapterListBySubjectView(generics.ListAPIView):
         subject_id = self.kwargs['subject_id']
         return Chapter.objects.filter(subject_id=subject_id)
 
+
 class QuizListByChapterView(generics.ListAPIView):
+    """
+    API view to list all quizzes associated with a specific chapter.
+
+    - GET: Retrieves all quizzes associated with a given chapter, identified by the chapter ID.
+    """
     serializer_class = QuizSerializer
     permission_classes = [IsAdmin,IsUser]
 
@@ -74,7 +110,13 @@ class QuizListByChapterView(generics.ListAPIView):
         chapter_id = self.kwargs['chapter_id']
         return Quiz.objects.filter(chapter_id=chapter_id)
 
+
 class QuestionListByQuizView(generics.ListAPIView):
+    """
+    API view to list all questions associated with a specific quiz.
+
+    - GET: Retrieves all questions associated with a given quiz, identified by the quiz ID.
+    """
     serializer_class = QuestionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -83,6 +125,12 @@ class QuestionListByQuizView(generics.ListAPIView):
         return Question.objects.filter(quiz_id=quiz_id)
 
 class QuizAttemptView(generics.CreateAPIView):
+    """    
+    API view to handle the submission of a quiz attempt.
+
+    - POST: Submits a user's answers for a quiz and calculates the score based on the provided answers.
+      The result includes the total score, number of correct answers, and individual question results.
+    """
     serializer_class = QuizAttemptSerializer
     permission_classes = [permissions.AllowAny]
     

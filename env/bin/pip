@@ -1,4 +1,4 @@
-#!/home/virat.jinjala@simform.dom/Desktop/SIM_QUIZ_REPO/env/bin/python3
+#!/home/virat/Desktop/DRF-Project/Final_Quiz_DRF/env/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

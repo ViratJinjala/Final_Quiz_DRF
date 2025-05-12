@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserView, SubjectView,  SubjectCreate, ChapterView, ChapterCreate, QuizView, QuizCreate, QuestionView, QuestionCreate
+from adminz.views import UserView, SubjectView,  SubjectCreate, ChapterView, ChapterCreate, QuizView, QuizCreate, QuestionView, QuestionCreate
 
 urlpatterns = [
     path('subjects/<int:pk>/', SubjectView.as_view(), name='subject'),
